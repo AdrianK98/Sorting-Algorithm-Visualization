@@ -1,0 +1,65 @@
+repos:
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.4.0
+    hooks:
+    -   id: check-yaml
+    -   id: end-of-file-fixer
+    -   id: trailing-whitespace
+    -   id: check-json
+    -   id: check-merge-conflict
+    -   id: debug-statements
+    -   id: mixed-line-ending
+    -   id: check-toml
+    -   id: name-tests-test
+    -   id: requirements-txt-fixer
+    -   id: pretty-format-json
+
+-   repo: https://github.com/psf/black
+    rev: 22.12.0
+    hooks:
+    -   id: black
+
+-   repo: https://github.com/ecugol/pre-commit-hooks-django
+    rev: v0.4.0  # Use the ref you want to point at
+    hooks:
+    -   id: check-untracked-migrations
+        # Optional, if specified, hook will work only on these branches
+        # otherwise it will work on all branches
+        # args: []
+    -   id: check-unapplied-migrations
+    -   id: check-absent-migrations
+    -   id: po-location-format
+        # Mandatory, select one of the following options:
+        # file: show only the file path as location
+        # never: remove all locations
+        args: ["--add-location", "file"]
+
+-   repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+
+-   repo: https://github.com/python-poetry/poetry
+    rev: 1.2.2  # add version here
+    hooks:
+      - id: poetry-check
+      - id: poetry-lock
+      - id: poetry-export
+        args: ["-f", "requirements.txt", "-o", "requirements.txt","--without-hashes"]
+        files: 'poetry.lock'
+
+-   repo: https://github.com/browniebroke/django-codemod
+    # Any tag/version (>1.2.0):
+    # https://github.com/browniebroke/django-codemod/tags
+    rev: v1.2.0
+    hooks:
+      - id: djcodemod
+        # Update arguments that suits you
+        args: ["run", "--deprecated-in", "3.0"]
+
+-   repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v2.1.1
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [] # optional: list of Conventional Commits types to allow e.g. [feat, fix, ci, chore, test]

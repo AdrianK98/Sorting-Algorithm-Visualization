@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    tty: true
+    depends_on:
+      - postgres
+
+  postgres:
+    image: bitnami/postgresql:12
