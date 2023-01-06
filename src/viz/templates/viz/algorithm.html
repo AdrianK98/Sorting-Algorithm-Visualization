@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bubble Sort Visualization</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"></script>
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <style>
+
+  body{
+    background-color: dimgray;
+  }
+    .bar {
+      fill: steelblue;
+    }
+  </style>
+</head>
+<body>
+
+  <button id="start-button" onclick="bubbleSort(animations)">Start</button>
+  <div id="visualization"></div>
+
+<script>
+    var arrayList = {{valueList}};
+    var animations = {{animations}};
+    // Set up the svg element
+// Set up the canvas
+
+var canvas;
+var array = {{valueList}};
+var barWidth;
+var barSpacing=5;
+var swapPos=[]
+var comparePos=[]
+
+function setup() {
+  canvas = createCanvas(500, 500);
+  barWidth = (width / array.length) - 10;  // decrease the width to add space between the bars
+}
+
+// Draw the bars
+function draw() {
+  background(105,105,105)
+  for (var i = 0; i < array.length; i++) {
+    //if index of bar is in swap positions change color
+    if (swapPos.includes(i)){
+      fill(255,0,0)
+    }
+    //if index if bar is being compared change colors
+    else if(comparePos.includes(i)){
+      fill(0,255,0)
+    }
+    else{
+      fill(0);
+    }
+    rect(i * (barWidth + barSpacing), 0, barWidth, array[i]*20);
+    fill(255);  // change the fill color to white
+    text(array[i], i * (barWidth + barSpacing) + barWidth / 2, array[i] * 10 - 5);  // draw the text above the bar
+  }
+}
+
+
+
+// Define the update function
+function bubbleSort(animations) {
+  // Iterate over the animations
+  for (var i = 0; i < animations.length; i++) {
+    // Use a closure to preserve the value of i
+    (function(i) {
+      setTimeout(function() {
+        comparePos=[];
+        swapPos=[]
+        var animation = animations[i];
+
+
+        //highligh bars that are being compared
+        var a = animation[0];
+        var b = animation[1];
+        comparePos = [a,b];
+
+
+        //Check if previous animation is the same, if it is swap places
+        if (JSON.stringify(animations[i]) === JSON.stringify(animations[i-1])) {
+          var temp = array[a];
+          array[a] = array[b];
+          array[b] = temp;
+          swapPos = [a,b];
+
+
+          console.log('The lists are the same');
+        }
+
+        // Clear colors after animations ends
+        if(i+1 === animations.length){
+
+          comparePos=[]
+        }
+
+
+      }, 50*i);  // delay by 250 milliseconds for each iteration
+    })(i);
+  }
+
+
+}
+
+// Set
+
+  </script>
+</body>
+</html>
