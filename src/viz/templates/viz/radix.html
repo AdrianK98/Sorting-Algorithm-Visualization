@@ -1,0 +1,12 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+  <script>
+    var animations = {{animations|safe}};
+    var array = {{valueList}};
+  </script>
+
+  <button id="start-button" onclick="radixSort(animations)">Start</button>
+  <div id="visualization"></div>
+
+{% endblock content %}

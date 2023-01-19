@@ -1,0 +1,41 @@
+{% load static %}
+
+
+<!doctype html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sorting visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"></script>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="{% static '/js/visualization.js' %}"></script>
+    <style>
+
+        body{
+          background-color: dimgray;
+        }
+          .bar {
+            fill: steelblue;
+          }
+        </style>
+</head>
+<body>
+
+<main>
+<a href="{% url 'mergeSort'%}">merge</a>
+<a href="{% url 'bubbleSort'%}">bubble</a>
+<a href="{% url 'selectionSort'%}">selection</a>
+<a href="{% url 'radixSort'%}">radix</a>
+<a href="{% url 'quickSort'%}">quick</a>
+
+        {% block content %}
+
+        {% endblock content %}
+
+
+</main>
+
+</body>
+</html>
