@@ -18,14 +18,18 @@ import environ
 env = environ.Env(
     # set casting, default value
     DEBUG=(bool, True),
-    POSTGRES_HOST=(str, "127.0.0.1"),
+    POSTGRES_HOST=(str, "localhost"),
     POSTGRES_PORT=(str, 5432),
     POSTGRES_USER=(str, "postgres"),
     POSTGRES_NAME=(str, "postgres"),
     POSTGRES_PASSWORD=(str, "postgres"),
+    RABBITMQ_HOST=(str, "127.0.0.1"),
+    RABBITMQ_PORT=(str, 5672),
+    RABBITMQ_USER=(str, "rabbitmq"),
+    RABBITMQ_PASSWORD=(str, "rabbitmq"),
 )
 
-
+print(env("POSTGRES_USER"))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -54,6 +58,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "viz.apps.VizConfig",
+    "django_celery_results",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -101,6 +107,17 @@ DATABASES = {
     }
 }
 
+"""
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": 'postgres',
+        "USER": 'postgres',
+        "PASSWORD": 'postgres',
+        "HOST": '127.0.0.1',
+        "PORT": 5432,
+    }
+}"""
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -144,3 +161,20 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Australia/Tasmania"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_RESULT_BACKEND = "django-db"
+# CELERY_CACHE_BACKEND = 'django-cache'
+
+CELERY_BROKER_URL = f'amqp://{env("RABBITMQ_USER")}:{env("RABBITMQ_PASSWORD")}@{env("RABBITMQ_HOST")}:{env("RABBITMQ_PORT")}'
+
+CELERY_RESULT_EXTENDED = True
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = True
+CELERY_RESULT_EXPIRES = True
