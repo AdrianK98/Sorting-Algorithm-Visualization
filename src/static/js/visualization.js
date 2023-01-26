@@ -39,6 +39,52 @@ function draw() {
 
 
 
+
+// Call the checkTaskStatus function when the page loads
+$(document).ready(function() {
+  checkTaskStatus("{{ task_id }}");
+});
+
+function testSort(animations) {
+  // Iterate over the animations
+  for (var i = 0; i < animations.length; i++) {
+    // Use a closure to preserve the value of i
+    (function(i) {
+      setTimeout(function() {
+        comparePosition=[];
+        swapPosition=[]
+        var animation = animations[i];
+
+
+        //highligh bars that are being compared
+        var firstIndex = animation[0];
+        var secondIndex = animation[1];
+        comparePosition = [firstIndex,secondIndex];
+
+
+        //Check if previous animation is the same, if it is swap bar places
+        if (JSON.stringify(animations[i]) === JSON.stringify(animations[i-1])) {
+          var temp = array[firstIndex];
+          array[firstIndex] = array[secondIndex];
+          array[secondIndex] = temp;
+          swapPosition = [firstIndex,secondIndex];
+
+
+          console.log('The lists are the same');
+        }
+
+        // Clear colors after animations ends
+        if(i+1 === animations.length){
+
+          comparePosition=[]
+        }
+
+      }, ANIMATION_SPEED_MS*i);  // delay by 250 milliseconds for each iteration
+    })(i);
+  }
+}
+
+
 // Define the update function
 function mergeSort(animations) {
 	//Working splits
@@ -122,9 +168,6 @@ function bubbleSort(animations) {
             array[firstIndex] = array[secondIndex];
             array[secondIndex] = temp;
             swapPosition = [firstIndex,secondIndex];
-
-
-            console.log('The lists are the same');
           }
 
           // Clear colors after animations ends

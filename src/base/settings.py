@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "viz.apps.VizConfig",
+    "viz",
     "django_celery_results",
     "django_celery_beat",
 ]
@@ -174,7 +174,7 @@ CELERY_RESULT_BACKEND = "django-db"
 
 CELERY_BROKER_URL = f'amqp://{env("RABBITMQ_USER")}:{env("RABBITMQ_PASSWORD")}@{env("RABBITMQ_HOST")}:{env("RABBITMQ_PORT")}'
 
-CELERY_RESULT_EXTENDED = True
-CELERY_TASK_IGNORE_RESULT = True
-CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = True
+# CELERY_RESULT_EXTENDED = True
+# CELERY_TASK_IGNORE_RESULT = True
+# CELERY_TASK_STORE_ERRORS_EVEN_IF_IGNORED = True
 CELERY_RESULT_EXPIRES = True

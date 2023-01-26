@@ -16,6 +16,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-postgres}
       POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
       POSTGRES_PORT: 5432
+      RABBITMQ_HOST: ${RABBITMQ_HOST:-rabbitmq}
+      RABBITMQ_PORT: ${RABBITMQ_PORT:-5672}
+      RABBITMQ_USER: ${RABBITMQ_USER:-rabbitmq}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-rabbitmq}
 
   app-migrate:
     build: .
@@ -39,7 +43,7 @@ services:
     build:
       context: .
     deploy:
-      replicas: 4
+      replicas: 1
     entrypoint: celery -A base worker -l DEBUG
     tty: true
     depends_on:

@@ -196,7 +196,5 @@ def quickSortAnimations(array):
 
     animations = []
     quickSort(array, 0, len(array) - 1, animations)
-    print(array)
-    print(animations)
 
     return animations

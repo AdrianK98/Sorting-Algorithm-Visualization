@@ -1,0 +1,20 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+
+
+<form method="POST" action="{% url 'startingPage' %}">
+    {% csrf_token %}
+    <h2>Select array size</h2>
+    <input type="range" id="slider" name="slider_value" min="1" max="500" value="50" oninput="showValue(this.value)" />
+    <span id="range"></span>
+    <input type="submit" value="Submit">
+    <script>
+        function showValue(newValue) {
+            document.getElementById("range").innerHTML=newValue;
+        }
+    </script>
+</form>
+<h1>{{values.valueList}}</h1>
+
+{% endblock content %}

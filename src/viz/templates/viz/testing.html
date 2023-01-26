@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block content %}
+  <script>
+
+    var array = {{valueList}};
+  </script>
+
+  <button id="start-button" onclick="bubbleSort(animations)" disabled>Start</button>
+  <div id="visualization"></div>
+
+
+<script>
+var checkTaskStatus = function(task_id) {
+  $.ajax({
+      type: "GET",
+      url: "{% url 'checkStatus' %}",
+      data: {'task_id': task_id},
+      success: function(data) {
+          if (data.status === "SUCCESS") {
+              console.log("Task completed!");
+              getTaskResult(task_id);
+          } else if (data.status === "PROGRESS" || data.status === "STARTED" ) {
+              console.log("Task not done yet!");
+              setTimeout(function() { checkTaskStatus(task_id); }, 500);
+          } else {
+              // An error occurred, handle it as needed
+              console.log("ERROR");
+          }
+      },
+      error: function(xhr, status, error) {
+          // An error occurred, handle it as needed
+          console.log("ERROR");
+      }
+  });
+};
+
+var getTaskResult = function(task_id) {
+$.ajax({
+        type: "GET",
+        url: "{% url 'getResults' %}",
+        data: {'task_id': task_id},
+        success: function(response) {
+            console.log("Getting task results...");
+            animations = response.result;
+            document.getElementById("start-button").disabled = false;
+            console.log("Ready to animate!");
+
+        }
+    });
+
+  }
+
+  $(document).ready(function() {
+    checkTaskStatus("{{task_id}}");
+
+  });
+</script>
+
+{% endblock content %}

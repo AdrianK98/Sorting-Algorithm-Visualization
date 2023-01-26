@@ -10,6 +10,7 @@
     <title>Sorting visualization</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.1.9/p5.min.js"></script>
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{% static '/js/visualization.js' %}"></script>
     <style>
 
@@ -24,12 +25,14 @@
 <body>
 
 <main>
-<a href="{% url 'mergeSort'%}">merge</a>
-<a href="{% url 'bubbleSort'%}">bubble</a>
-<a href="{% url 'selectionSort'%}">selection</a>
-<a href="{% url 'radixSort'%}">radix</a>
-<a href="{% url 'quickSort'%}">quick</a>
-
+        <a href="{% url 'startingPage' %}">HOME</a>
+        {% if values %}
+        <a href="{% url 'bubbleSort' values.id %}">BUBBLE</a>
+        <a href="{% url 'mergeSort' values.id %}">MERGE</a>
+        <a href="{% url 'quickSort' values.id %}">QUICK</a>
+        <a href="{% url 'radixSort' values.id %}">RADIX</a>
+        <a href="{% url 'selectionSort' values.id %}">SELECTION</a>
+        {% endif %}
         {% block content %}
 
         {% endblock content %}
@@ -37,5 +40,58 @@
 
 </main>
 
+
+
+<script>
+var checkTaskStatus = function(task_id) {
+  $.ajax({
+      type: "GET",
+      url: "{% url 'checkStatus' %}",
+      data: {'task_id': task_id},
+      success: function(data) {
+          if (data.status === "SUCCESS") {
+              console.log("Task completed!");
+              getTaskResult(task_id);
+          } else if (data.status === "PROGRESS" || data.status === "STARTED" ) {
+              console.log("Task not done yet!");
+              setTimeout(function() { checkTaskStatus(task_id); }, 1000);
+          } else {
+              // An error occurred, handle it as needed
+              console.log("ERROR")
+              console.log(data.status);
+          }
+      },
+      error: function(xhr, status, error) {
+
+          console.log("ERROR",status,error);
+      }
+  });
+};
+
+var getTaskResult = function(task_id) {
+$.ajax({
+        type: "GET",
+        url: "{% url 'getResults' %}",
+        data: {'task_id': task_id},
+        success: function(response) {
+            animations = response.result;
+            document.getElementById("start-button").disabled = false;
+            console.log("Ready to go!");
+
+        }
+
+    });
+
+  }
+
+{% if task_id %}
+  $(document).ready(function() {
+
+    checkTaskStatus("{{task_id}}");
+
+  });
+{% endif %}
+
+</script>
 </body>
 </html>
